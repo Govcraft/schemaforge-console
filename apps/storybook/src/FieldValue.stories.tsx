@@ -10,7 +10,7 @@ import { FieldValue } from "@schemaforge/react"
 // here is visibly missing.
 
 const meta: Meta<typeof FieldValue> = {
-  title: "Showcase/FieldValue",
+  title: "Molecules/FieldValue",
   component: FieldValue,
 }
 export default meta
@@ -279,8 +279,9 @@ export const EnumColorPalette: Story = {
   },
 }
 
-// Arg-driven single story so the Controls panel can exercise one badge.
-export const StatusBadge: Story = {
+// Arg-driven single story so the Controls panel can exercise the molecule's
+// field→atom mapping. (The StatusBadge atom itself is showcased under Atoms.)
+export const StatusBadgeField: Story = {
   args: {
     field: { name: "stage", kind: "enum", required: true, widget: "status_badge", enumColors: DEAL_STAGE_COLORS },
     value: "closed_won",
