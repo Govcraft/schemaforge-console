@@ -26,7 +26,7 @@ import {
   type LucideIcon,
 } from "lucide-react"
 import { isSystemSchema } from "@schemaforge/client"
-import { useSchemas } from "@schemaforge/react"
+import { StatusBadge, useSchemas } from "@schemaforge/react"
 import { client, session } from "./forge"
 
 const PLATFORM_ADMIN_ROLE = "platform_admin"
@@ -161,7 +161,7 @@ function TenantControl() {
   // Platform admins are never tenant-scoped server-side — show a badge, not a
   // picker, so we don't imply a constraint that doesn't exist.
   if (isPlatformAdmin) {
-    return <span className="sf-tenant-chip sf-tenant-admin">Operating as: platform_admin</span>
+    return <StatusBadge color="amber" label="Operating as: platform_admin" />
   }
 
   function switchTo(value: string) {
@@ -192,12 +192,18 @@ function TenantControl() {
 
   if (active) {
     return (
-      <span className="sf-tenant-chip" title={`${active.tenant_type}:${active.tenant_id}`}>
-        <Building2 size={14} aria-hidden="true" />
-        <span>
-          {active.tenant_type}: {shortTenantId(active.tenant_id)}
-        </span>
-      </span>
+      <StatusBadge
+        color="neutral"
+        title={`${active.tenant_type}:${active.tenant_id}`}
+        label={
+          <>
+            <Building2 size={14} aria-hidden="true" />
+            <span>
+              {active.tenant_type}: {shortTenantId(active.tenant_id)}
+            </span>
+          </>
+        }
+      />
     )
   }
   return null

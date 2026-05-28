@@ -344,24 +344,9 @@ body {
   font-size: var(--sf-text-sm);
   cursor: pointer;
 }
-.sf-tenant-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 10px;
-  border: var(--sf-border-width) solid var(--sf-color-border);
-  border-radius: var(--sf-radius-sm);
-  background: var(--sf-color-surface);
-  color: var(--sf-color-muted-fg);
-  font-size: var(--sf-text-sm);
-}
-.sf-tenant-admin {
-  border-color: var(--sf-color-accent);
-  color: var(--sf-color-fg);
-  font-family: var(--sf-font-mono);
-  font-size: var(--sf-text-xs);
-  letter-spacing: 0.04em;
-}
+/* The tenant indicators (platform-admin + single-tenant) now reuse the
+   StatusBadge atom; their bespoke .sf-tenant-chip/.sf-tenant-admin rules are
+   gone. The .sf-tenant wrapper above stays — it styles the switcher <select>. */
 
 /* ---- Skip link ---- */
 .sf-skip-link {

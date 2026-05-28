@@ -11,8 +11,14 @@ export type StatusBadgeProps = {
   label: ReactNode
   /** Semantic color token (defaults to neutral). */
   color?: EnumColor
+  /** Native tooltip (e.g. the full value when the label is truncated). */
+  title?: string
 }
 
-export function StatusBadge({ label, color = "neutral" }: StatusBadgeProps) {
-  return <span className={`sf-badge sf-badge--${color}`}>{label}</span>
+export function StatusBadge({ label, color = "neutral", title }: StatusBadgeProps) {
+  return (
+    <span className={`sf-badge sf-badge--${color}`} title={title}>
+      {label}
+    </span>
+  )
 }
