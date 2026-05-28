@@ -5,6 +5,7 @@
 // re-implement: raw FieldType enum -> normalized FieldMeta.
 
 import type {
+  DashboardConfig,
   EnumColor,
   FieldMeta,
   FieldResponse,
@@ -100,6 +101,28 @@ export function getFieldAccess(
 
 export function isSystemSchema(schema: SchemaResponse): boolean {
   return (schema.annotations ?? []).some((a) => annotationTag(a) === "system")
+}
+
+/** Extract the schema's `@dashboard(...)` config (widgets, layout, group_by,
+ *  sort_default). The wire shape is snake_case; this normalizes to camelCase. */
+export function getDashboard(annotations: unknown[]): DashboardConfig | undefined {
+  for (const a of annotations) {
+    if (annotationTag(a) === "dashboard") {
+      const o = a as {
+        widgets?: unknown
+        layout?: unknown
+        group_by?: unknown
+        sort_default?: unknown
+      }
+      return {
+        widgets: Array.isArray(o.widgets) ? o.widgets.filter((w): w is string => typeof w === "string") : [],
+        layout: typeof o.layout === "string" ? o.layout : undefined,
+        groupBy: typeof o.group_by === "string" ? o.group_by : undefined,
+        sortDefault: typeof o.sort_default === "string" ? o.sort_default : undefined,
+      }
+    }
+  }
+  return undefined
 }
 
 /** True if any field carries `@kanban_column`. */

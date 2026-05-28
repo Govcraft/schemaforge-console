@@ -130,10 +130,21 @@ export type ListEntitiesResult = {
   permissions?: SchemaPermissions
 }
 
+/** `@dashboard(...)` schema-level config. `layout: "kanban"` makes a board the
+ *  primary list view; `groupBy` names the column field (else the @kanban_column
+ *  field is used). */
+export type DashboardConfig = {
+  widgets: string[]
+  layout?: string
+  groupBy?: string
+  sortDefault?: string
+}
+
 export type SchemaView = {
   schema: SchemaResponse
   fields: FieldMeta[]
   displayField?: string
+  dashboard?: DashboardConfig
 }
 
 // ---------------------------------------------------------------------------

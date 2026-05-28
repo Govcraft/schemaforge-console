@@ -45,8 +45,31 @@ body {
 .sf-toolbar + .sf-table-wrap {
   border-radius: 0;
 }
+/* In board view the toolbar is a standalone bar (no table panel below it), so
+   restore its bottom border + full radius. */
+.sf-toolbar--alone {
+  border-bottom: var(--sf-border-width) solid var(--sf-color-border);
+  border-radius: var(--sf-radius-sm);
+}
 .sf-grow {
   flex: 1;
+}
+
+/* List / Board view toggle — a small segmented control of two .sf-btns. */
+.sf-viewtoggle {
+  display: inline-flex;
+  gap: var(--sf-space-1);
+}
+.sf-viewtoggle .sf-btn {
+  height: auto;
+  padding: 6px 12px;
+  font-size: var(--sf-text-sm);
+}
+.sf-viewtoggle .sf-btn[aria-pressed="true"] {
+  background: var(--sf-color-surface-hover);
+  border-color: var(--sf-color-border-strong);
+  color: var(--sf-color-fg);
+  font-weight: var(--sf-weight-medium);
 }
 .sf-toolbar-select {
   height: auto;

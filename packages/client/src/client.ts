@@ -10,6 +10,7 @@
 // own. Same client, same wire logic, different host integration.
 
 import {
+  getDashboard,
   getDisplayField,
   toFieldMeta,
 } from "./field-meta"
@@ -118,7 +119,12 @@ export function createForgeClient(config: ForgeClientConfig): ForgeClient {
       const schema = await request<SchemaResponse>(
         `${FORGE_PREFIX}/schemas/${encodeURIComponent(name)}`,
       )
-      return { schema, fields: schema.fields.map(toFieldMeta), displayField: getDisplayField(schema.annotations) }
+      return {
+        schema,
+        fields: schema.fields.map(toFieldMeta),
+        displayField: getDisplayField(schema.annotations),
+        dashboard: getDashboard(schema.annotations),
+      }
     },
     async listEntities(schema, params = { limit: 50 }) {
       const qs = new URLSearchParams()

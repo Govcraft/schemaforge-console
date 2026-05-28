@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { toast } from "sonner"
-import { listColumns } from "@schemaforge/client"
+import { findKanbanField, listColumns } from "@schemaforge/client"
 import {
   ConfirmDialog,
   EntityTable,
   ErrorBlock,
+  KanbanBoard,
   useEntityList,
   useEntityMutations,
   useSchema,
@@ -29,6 +30,8 @@ export function EntityListPage() {
   const [filterInput, setFilterInput] = useState("")
   const [filterValue, setFilterValue] = useState("")
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  // null = follow the schema's default (board when @dashboard(layout:"kanban")).
+  const [view, setView] = useState<"list" | "board" | null>(null)
 
   // Debounce the filter so keystrokes don't stampede the backend.
   useEffect(() => {
@@ -59,12 +62,26 @@ export function EntityListPage() {
       </div>
     )
 
+  const allFields = meta.data?.fields ?? []
+
   // Curate columns via the `@list` hints (primary headline, forced columns,
   // hidden suppressed) with a sane default cap so wide schemas don't render a
   // 19-column wall. The full field set is still reachable on the detail page.
-  const fields = listColumns(meta.data?.fields ?? [], { displayField: meta.data?.displayField }).map(
-    (c) => c.field,
-  )
+  const fields = listColumns(allFields, { displayField: meta.data?.displayField }).map((c) => c.field)
+
+  // A board is offered only when the schema asks for it via
+  // `@dashboard(layout:"kanban")`. The grouping column is the annotation's
+  // `group_by` (else the @kanban_column field). When offered, the board is the
+  // default view (author intent); the toggle lets the operator fall back to the
+  // table. A schema with a kanban column but no kanban layout stays list-only.
+  const dashboard = meta.data?.dashboard
+  const columnField =
+    (dashboard?.groupBy ? allFields.find((f) => f.name === dashboard.groupBy) : undefined) ??
+    findKanbanField(allFields)
+  const canBoard = dashboard?.layout === "kanban" && Boolean(columnField)
+  const activeView: "list" | "board" = canBoard ? (view ?? "board") : "list"
+  const showBoard = activeView === "board" && !rows.error
+
   const canCreate = rows.data?.permissions?.create ?? false
   const total = rows.data?.count ?? 0
   const pageStart = total === 0 ? 0 : offset + 1
@@ -114,7 +131,27 @@ export function EntityListPage() {
         ) : null}
       </div>
 
-      <div className="sf-toolbar">
+      <div className={"sf-toolbar" + (showBoard ? " sf-toolbar--alone" : "")}>
+        {canBoard ? (
+          <div className="sf-viewtoggle" role="group" aria-label="View">
+            <button
+              type="button"
+              className="sf-btn"
+              aria-pressed={activeView === "list"}
+              onClick={() => setView("list")}
+            >
+              List
+            </button>
+            <button
+              type="button"
+              className="sf-btn"
+              aria-pressed={activeView === "board"}
+              onClick={() => setView("board")}
+            >
+              Board
+            </button>
+          </div>
+        ) : null}
         {filterableFields.length > 0 ? (
           <>
             <select
@@ -160,6 +197,15 @@ export function EntityListPage() {
         <div className="sf-table-wrap">
           <ErrorBlock title="Failed to load records" error={rows.error} onRetry={() => rows.refetch()} />
         </div>
+      ) : showBoard ? (
+        <KanbanBoard
+          schema={schema}
+          fields={allFields}
+          rows={rows.data?.rows ?? []}
+          detailHref={(id) => `/${encodeURIComponent(schema)}/${encodeURIComponent(id)}`}
+          displayField={meta.data?.displayField}
+          columnField={columnField}
+        />
       ) : (
         <div className="sf-table-wrap">
           <EntityTable
