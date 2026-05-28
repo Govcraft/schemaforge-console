@@ -63,6 +63,16 @@
   --sf-color-border: var(--sf-neutral-200);
   --sf-color-border-strong: var(--sf-neutral-300);
   --sf-color-surface-hover: var(--sf-neutral-50);
+  --sf-color-table-head: var(--sf-neutral-100);
+
+  /* ---- Semantic: dark "ink" rail (the sidebar; stays dark in both themes) ---- */
+  --sf-color-rail: var(--sf-neutral-900);
+  --sf-color-rail-fg: var(--sf-neutral-50);
+  --sf-color-rail-fg-2: var(--sf-neutral-300);
+  --sf-color-rail-fg-3: var(--sf-neutral-400);
+  --sf-color-rail-line: var(--sf-neutral-800);
+  --sf-color-rail-hover: rgba(255, 255, 255, 0.06);
+  --sf-color-rail-active: rgba(255, 255, 255, 0.1);
 
   /* ---- Semantic: form-control borders (AA 1.4.11 — 4.83:1) ---- */
   --sf-color-input-border: var(--sf-neutral-500);
@@ -137,6 +147,32 @@
   --sf-border-width-2: 2px;
   --sf-control-h: 2.75rem; /* 44px touch target */
   --sf-control-pad-x: var(--sf-space-4);
+}
+
+/* ---- Dark theme: re-point only the semantic surface/fg/border tokens.
+   Set [data-theme="dark"] on <html>. Component rules are untouched. ---- */
+[data-theme="dark"] {
+  --sf-color-surface: #181a1f;
+  --sf-color-bg: #0f1115;
+  --sf-color-fg: #f0f1f3;
+  --sf-color-muted-fg: #a7afba; /* ~5:1 on surface */
+  --sf-color-border: #2a2e35;
+  --sf-color-border-strong: #3b414a;
+  --sf-color-surface-hover: rgba(255, 255, 255, 0.04);
+  --sf-color-table-head: #14161b;
+
+  --sf-color-input-border: #6b7280; /* AA on dark surface */
+  --sf-color-input-border-hover: #9aa3af;
+
+  --sf-color-accent-fg: var(--sf-accent-300); /* lighter accent text on dark */
+  --sf-color-focus-ring: var(--sf-accent-300);
+
+  --sf-color-danger: #fca5a5;
+  --sf-color-danger-border: #dc2626;
+  --sf-color-danger-bg: rgba(220, 38, 38, 0.14);
+
+  --sf-color-rail: #060708;
+  --sf-color-rail-line: #191c21;
 }
 
 /* ---- Focus ring (WCAG 2.4.13 / 1.4.11; survives forced-colors) ---- */
@@ -271,16 +307,30 @@
 .sf-table th,
 .sf-table td {
   text-align: left;
-  padding: var(--sf-space-3) var(--sf-space-4);
+  padding: var(--sf-space-2) var(--sf-space-3);
   border-bottom: var(--sf-border-width) solid var(--sf-color-border);
 }
+/* Dense cells: one line, ellipsis past a sensible width so a wide schema
+   doesn't blow out the row height. */
+.sf-table tbody td {
+  white-space: nowrap;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
 .sf-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--sf-color-table-head);
+  white-space: nowrap;
   font-family: var(--sf-font-mono);
   font-size: var(--sf-text-xs);
   font-weight: var(--sf-weight-medium);
   letter-spacing: var(--sf-tracking-caps);
   text-transform: uppercase;
-  color: var(--sf-neutral-500);
+  color: var(--sf-color-muted-fg);
   border-bottom: var(--sf-border-width) solid var(--sf-color-border-strong);
 }
 .sf-table th button {
@@ -288,6 +338,9 @@
   cursor: pointer;
   display: inline-flex;
   gap: var(--sf-space-1);
+}
+.sf-table th button:hover {
+  color: var(--sf-color-fg);
 }
 .sf-table tbody tr:hover {
   background: var(--sf-color-surface-hover);

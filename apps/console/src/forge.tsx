@@ -3,7 +3,7 @@
 // A different host (Next.js, cookies) would swap exactly this file.
 
 import { type ReactNode } from "react"
-import { Link as RouterLink, useNavigate } from "react-router-dom"
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom"
 import { createForgeClient } from "@schemaforge/client"
 import { ForgeProvider, type ForgeLinkProps, type ForgeNav } from "@schemaforge/react"
 
@@ -23,6 +23,10 @@ export const session = {
     }
   },
   activeTenant: (): string | null => sessionStorage.getItem(TENANT_KEY),
+  /** Store the `<type>:<id>` active-tenant header value (tenant switcher). */
+  setActiveTenant(tenantType: string, tenantId: string): void {
+    sessionStorage.setItem(TENANT_KEY, `${tenantType}:${tenantId}`)
+  },
   signIn(token: string, roles: string[]): void {
     sessionStorage.setItem(TOKEN_KEY, token)
     sessionStorage.setItem(ROLES_KEY, JSON.stringify(roles))
@@ -54,6 +58,9 @@ function ConsoleLink({ to, children, className, ...rest }: ForgeLinkProps) {
  *  inside <BrowserRouter> because the nav adapter uses useNavigate. */
 export function ForgeRoot({ children }: { children: ReactNode }) {
   const navigate = useNavigate()
+  // Re-render on navigation so roles injected into ForgeProvider refresh after
+  // a sign-in navigates to "/" (sessionStorage isn't reactive on its own).
+  useLocation()
   const nav: ForgeNav = { Link: ConsoleLink, navigate: (to) => navigate(to) }
   return (
     <ForgeProvider client={client} nav={nav} roles={session.roles()}>

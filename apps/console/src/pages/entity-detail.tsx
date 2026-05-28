@@ -13,9 +13,9 @@ export function EntityDetailPage() {
 
   if (!schema || !id) return null
   if (meta.isLoading || entity.isLoading)
-    return <main className="sf-page"><p className="sf-empty">Loading…</p></main>
+    return <div className="sf-page"><p className="sf-empty">Loading…</p></div>
   if (meta.error || entity.error || !entity.data)
-    return <main className="sf-page"><p className="sf-error">Record not found.</p></main>
+    return <div className="sf-page"><p className="sf-error">Record not found.</p></div>
 
   const data = entity.data
   const perms = data.__permissions
@@ -26,7 +26,7 @@ export function EntityDetailPage() {
   }
 
   return (
-    <main className="sf-page">
+    <div className="sf-page">
       <p><Link to={`/${encodeURIComponent(schema)}`}>← {schema}</Link></p>
       <div className="sf-page-head">
         <h1>{schema} record</h1>
@@ -51,6 +51,6 @@ export function EntityDetailPage() {
       >
         <ChildCollections parentSchema={schema} parentId={id} />
       </EntityParentChild>
-    </main>
+    </div>
   )
 }

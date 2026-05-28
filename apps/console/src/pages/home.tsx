@@ -7,12 +7,12 @@ import { useSchemas } from "@schemaforge/react"
 export function HomePage() {
   const { data: schemas, isLoading, error } = useSchemas()
 
-  if (isLoading) return <main className="sf-page"><p className="sf-empty">Loading schemas…</p></main>
+  if (isLoading) return <div className="sf-page"><p className="sf-empty">Loading schemas…</p></div>
   if (error)
     return (
-      <main className="sf-page">
+      <div className="sf-page">
         <p className="sf-error">Failed to load schemas. <Link to="/login">Sign in</Link>?</p>
-      </main>
+      </div>
     )
 
   const all = schemas ?? []
@@ -20,12 +20,17 @@ export function HomePage() {
   const system = all.filter(isSystemSchema)
 
   return (
-    <main className="sf-page">
-      <h1>Catalog</h1>
-      <p className="sf-muted">{all.length} schemas</p>
+    <div className="sf-page">
+      <div className="sf-page-head">
+        <div>
+          <div className="sf-eyebrow">Catalog</div>
+          <h1>Schemas</h1>
+          <p className="sf-page-sub"><span className="sf-mono">{all.length}</span> total</p>
+        </div>
+      </div>
       <Section title="Application" schemas={app} />
       <Section title="System" schemas={system} />
-    </main>
+    </div>
   )
 }
 
