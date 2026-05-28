@@ -321,6 +321,34 @@
 }
 
 /* ========================================================================
+   Parent / child (master-detail)
+   ===================================================================== */
+.sf-pc {
+  display: grid;
+  gap: var(--sf-space-6);
+}
+.sf-pc-section {
+  display: block;
+}
+.sf-pc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sf-space-3);
+  margin-bottom: var(--sf-space-2);
+}
+.sf-pc-heading {
+  margin: 0 0 var(--sf-space-2);
+  font-size: var(--sf-text-lg);
+  line-height: var(--sf-leading-lg);
+  font-weight: var(--sf-weight-semibold);
+  color: var(--sf-color-fg);
+}
+.sf-pc-header .sf-pc-heading {
+  margin-bottom: 0;
+}
+
+/* ========================================================================
    Forms
    ===================================================================== */
 .sf-form {

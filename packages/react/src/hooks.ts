@@ -6,12 +6,14 @@
 // directly — the presentational components below take plain props, not hooks.
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import type {
-  EntityRow,
-  ListEntitiesParams,
-  ListEntitiesResult,
-  SchemaResponse,
-  SchemaView,
+import {
+  findChildRelations,
+  type ChildRelation,
+  type EntityRow,
+  type ListEntitiesParams,
+  type ListEntitiesResult,
+  type SchemaResponse,
+  type SchemaView,
 } from "@schemaforge/client"
 import { useForgeClient } from "./context"
 
@@ -68,6 +70,24 @@ export function useRelationOptions(targetSchema: string | undefined) {
       }))
     },
     enabled: Boolean(targetSchema),
+  })
+}
+
+/** Discover the child collections of a parent schema: every other schema with
+ *  a relation_one field targeting it. Describes all schemas once (cached by
+ *  react-query). The host renders one connected section per returned relation.
+ *  NOTE: O(schemas) describe calls — fine for typical schema counts; revisit
+ *  with a server-side relations endpoint if catalogs grow large. */
+export function useChildRelations(parentSchema: string | undefined) {
+  const client = useForgeClient()
+  return useQuery<ChildRelation[]>({
+    queryKey: ["forge", "child-relations", parentSchema],
+    enabled: Boolean(parentSchema),
+    queryFn: async () => {
+      const schemas = await client.listSchemas()
+      const views = await Promise.all(schemas.map((s) => client.describeSchema(s.name)))
+      return findChildRelations(parentSchema!, views)
+    },
   })
 }
 
