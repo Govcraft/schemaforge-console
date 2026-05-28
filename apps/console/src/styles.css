@@ -1,77 +1,17 @@
-/* Default token theme for the @schemaforge/react sf-* classes, plus a little
-   console chrome. Consumers restyle by overriding these tokens / classes. */
-:root {
-  --sf-bg: #ffffff;
-  --sf-fg: #1a1d21;
-  --sf-muted: #6b7280;
-  --sf-border: #e5e7eb;
-  --sf-accent: #ea580c;
-  --sf-row-hover: #f9fafb;
-  --sf-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
-  --sf-sans: ui-sans-serif, system-ui, -apple-system, sans-serif;
+/* The design system — tokens + every sf-* component rule — lives in
+   @schemaforge/react. This file adds only the console app's own document
+   reset; it deliberately holds NO component styling so it cannot drift. */
+@import "@schemaforge/react/styles.css";
+
+* {
+  box-sizing: border-box;
 }
 
-* { box-sizing: border-box; }
-body { margin: 0; font-family: var(--sf-sans); color: var(--sf-fg); background: var(--sf-bg); }
-
-.sf-page { max-width: 1200px; margin: 0 auto; padding: 24px 32px 64px; }
-.sf-login { max-width: 360px; margin: 12vh auto; padding: 0 24px; }
-.sf-login form { display: flex; flex-direction: column; gap: 8px; }
-.sf-login label { font-size: 12px; color: var(--sf-muted); margin-top: 8px; }
-.sf-login input, .sf-input, .sf-select, .sf-textarea {
-  font: inherit; padding: 8px 10px; border: 1px solid var(--sf-border); border-radius: 4px; background: var(--sf-bg);
+body {
+  margin: 0;
+  background: var(--sf-color-bg);
+  color: var(--sf-color-fg);
+  font-family: var(--sf-font-sans);
+  font-size: var(--sf-text-base);
+  line-height: var(--sf-leading-base);
 }
-.sf-login button, .sf-page button {
-  font: inherit; padding: 8px 14px; border: 1px solid var(--sf-border); border-radius: 4px;
-  background: var(--sf-bg); cursor: pointer;
-}
-.sf-login button { margin-top: 12px; background: var(--sf-accent); color: #fff; border-color: var(--sf-accent); }
-
-.sf-eyebrow { font-family: var(--sf-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--sf-muted); }
-.sf-muted { color: var(--sf-muted); }
-.sf-mono { font-family: var(--sf-mono); font-size: 12px; }
-.sf-empty { color: var(--sf-muted); padding: 24px 0; }
-.sf-error { color: #b91c1c; }
-
-.sf-catalog { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
-.sf-catalog a { display: block; padding: 12px; border: 1px solid var(--sf-border); border-radius: 4px; text-decoration: none; color: inherit; }
-.sf-catalog a:hover { border-color: var(--sf-accent); }
-
-.sf-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.sf-table th, .sf-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--sf-border); }
-.sf-table th { font-family: var(--sf-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--sf-muted); }
-.sf-table th button { all: unset; cursor: pointer; display: inline-flex; gap: 4px; }
-.sf-table tbody tr:hover { background: var(--sf-row-hover); }
-
-.sf-sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
-}
-
-/* Page header / actions */
-.sf-page-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 4px; }
-.sf-page-head h1 { margin: 0; }
-.sf-actions { display: flex; gap: 8px; }
-.sf-btn { display: inline-flex; align-items: center; padding: 8px 14px; border: 1px solid var(--sf-border); border-radius: 4px; background: var(--sf-bg); color: inherit; text-decoration: none; cursor: pointer; font: inherit; }
-.sf-btn:hover { border-color: var(--sf-accent); }
-.sf-btn-danger { color: #b91c1c; border-color: #f3c4c4; }
-.sf-row-actions { display: inline-flex; gap: 10px; }
-.sf-row-actions a, .sf-link-btn { color: var(--sf-accent); text-decoration: none; background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
-.sf-link-btn:disabled { opacity: 0.5; cursor: default; }
-.sf-req { color: var(--sf-accent); }
-
-/* SpecSheet (read-only detail) */
-.sf-spec { margin: 16px 0 0; display: grid; gap: 0; }
-.sf-spec-row { display: grid; grid-template-columns: 200px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--sf-border); }
-.sf-spec-key { font-family: var(--sf-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--sf-muted); margin: 0; }
-.sf-spec-val { margin: 0; }
-
-/* EntityForm */
-.sf-form { display: grid; gap: 4px; max-width: 720px; margin-top: 16px; }
-.sf-form-row { display: grid; grid-template-columns: 200px 1fr; gap: 12px; align-items: start; padding: 8px 0; }
-.sf-form-label { font-family: var(--sf-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--sf-muted); padding-top: 8px; }
-.sf-form-field { display: flex; flex-direction: column; gap: 4px; }
-.sf-form-field .sf-input, .sf-form-field .sf-select, .sf-form-field .sf-textarea { width: 100%; }
-.sf-form-actions { display: flex; gap: 8px; margin-top: 16px; }
-.sf-form-actions button[type="submit"] { background: var(--sf-accent); color: #fff; border: 1px solid var(--sf-accent); padding: 8px 16px; border-radius: 4px; cursor: pointer; font: inherit; }
-.sf-form-actions button:disabled { opacity: 0.6; cursor: default; }

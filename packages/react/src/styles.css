@@ -1,0 +1,532 @@
+/*
+ * @schemaforge/react — canonical design tokens + component styles.
+ *
+ * This file is the SINGLE SOURCE OF TRUTH for the sf-* visual language. Both
+ * the ops console and the Storybook showcase import it; do not copy these
+ * rules elsewhere.
+ *
+ * Two-tier token contract (this is public API):
+ *   - Primitive tokens  (--sf-neutral-500, --sf-accent-500, ...) are the raw
+ *     palette/scale. Treat as internal; prefer not to override directly.
+ *   - Semantic tokens   (--sf-color-fg, --sf-color-accent, --sf-space-4, ...)
+ *     map onto primitives and are what every component rule consumes.
+ *
+ * To RETHEME: override only the semantic tier on :root (or a scope). The
+ * common reskin is the accent set:
+ *     --sf-color-accent, --sf-color-accent-hover,
+ *     --sf-color-accent-fg, --sf-color-focus-ring.
+ * Keep --sf-color-accent-fg >= 4.5:1 and --sf-color-focus-ring >= 3:1 against
+ * your surface so WCAG 2.1 AA conformance is preserved.
+ *
+ * Light theme only for now. A dark theme is a later override that re-points
+ * the semantic surface/fg/border tokens; no component rule changes needed.
+ */
+
+:root {
+  /* ---- Primitive: neutral ramp (cool gray) ---- */
+  --sf-neutral-0: #ffffff;
+  --sf-neutral-50: #f7f8fa;
+  --sf-neutral-100: #eef0f3;
+  --sf-neutral-200: #dde1e6;
+  --sf-neutral-300: #c2c8d0;
+  --sf-neutral-400: #9aa3af;
+  --sf-neutral-500: #6b7280;
+  --sf-neutral-600: #4b5563;
+  --sf-neutral-700: #374151;
+  --sf-neutral-800: #1f2733;
+  --sf-neutral-900: #11161f;
+
+  /* ---- Primitive: accent ramp (orange — the default brand, retheme-able) ---- */
+  --sf-accent-subtle: #fff1e8;
+  --sf-accent-300: #fb923c;
+  --sf-accent-500: #ea580c;
+  --sf-accent-600: #c2410c;
+  --sf-accent-700: #9a3412;
+
+  /* ---- Primitive: danger ramp ---- */
+  --sf-danger-subtle: #fef2f2;
+  --sf-danger-300: #fca5a5;
+  --sf-danger-500: #dc2626;
+  --sf-danger-600: #b91c1c;
+  --sf-danger-700: #991b1b;
+
+  /* ---- Primitive: success ramp ---- */
+  --sf-success-subtle: #f0fdf4;
+  --sf-success-500: #16a34a;
+  --sf-success-700: #15803d;
+
+  /* ---- Semantic: surfaces & text ---- */
+  --sf-color-surface: var(--sf-neutral-0);
+  --sf-color-bg: var(--sf-neutral-50);
+  --sf-color-fg: var(--sf-neutral-900);
+  --sf-color-muted-fg: var(--sf-neutral-600);
+  --sf-color-border: var(--sf-neutral-200);
+  --sf-color-border-strong: var(--sf-neutral-300);
+  --sf-color-surface-hover: var(--sf-neutral-50);
+
+  /* ---- Semantic: form-control borders (AA 1.4.11 — 4.83:1) ---- */
+  --sf-color-input-border: var(--sf-neutral-500);
+  --sf-color-input-border-hover: var(--sf-neutral-600);
+
+  /* ---- Semantic: accent ---- */
+  --sf-color-accent: var(--sf-accent-500);
+  --sf-color-accent-hover: var(--sf-accent-600);
+  --sf-color-accent-fg: var(--sf-accent-700); /* accent-colored TEXT on light */
+  --sf-color-accent-on: var(--sf-neutral-0); /* text/icon on accent fill */
+  --sf-color-accent-subtle: var(--sf-accent-subtle);
+
+  /* ---- Semantic: danger ---- */
+  --sf-color-danger: var(--sf-danger-600);
+  --sf-color-danger-border: var(--sf-danger-500);
+  --sf-color-danger-bg: var(--sf-danger-subtle);
+  --sf-color-danger-on: var(--sf-neutral-0);
+  --sf-color-danger-hover: var(--sf-danger-700);
+
+  /* ---- Semantic: success ---- */
+  --sf-color-success: var(--sf-success-700);
+  --sf-color-success-bg: var(--sf-success-subtle);
+
+  /* ---- Semantic: focus ---- */
+  --sf-color-focus-ring: var(--sf-accent-600); /* 4.86:1 vs surface */
+
+  /* ---- Typography: families ---- */
+  --sf-font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --sf-font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code",
+    Menlo, Consolas, monospace;
+
+  /* ---- Typography: scale (size / line-height / weight) ---- */
+  --sf-text-xs: 0.75rem;
+  --sf-leading-xs: 1rem;
+  --sf-text-sm: 0.875rem;
+  --sf-leading-sm: 1.25rem;
+  --sf-text-base: 1rem;
+  --sf-leading-base: 1.5rem;
+  --sf-text-lg: 1.125rem;
+  --sf-leading-lg: 1.625rem;
+  --sf-text-xl: 1.375rem;
+  --sf-leading-xl: 1.875rem;
+  --sf-text-2xl: 1.75rem;
+  --sf-leading-2xl: 2.25rem;
+
+  --sf-weight-normal: 400;
+  --sf-weight-medium: 500;
+  --sf-weight-semibold: 600;
+  --sf-tracking-caps: 0.06em;
+
+  /* ---- Spacing scale (4px base) ---- */
+  --sf-space-0: 0;
+  --sf-space-1: 0.25rem;
+  --sf-space-2: 0.5rem;
+  --sf-space-3: 0.75rem;
+  --sf-space-4: 1rem;
+  --sf-space-5: 1.5rem;
+  --sf-space-6: 2rem;
+  --sf-space-7: 3rem;
+  --sf-space-8: 4rem;
+
+  /* ---- Radius ---- */
+  --sf-radius-none: 0;
+  --sf-radius-sm: 0.25rem;
+  --sf-radius-md: 0.375rem;
+  --sf-radius-lg: 0.5rem;
+  --sf-radius-full: 9999px;
+
+  /* ---- Borders & control sizing ---- */
+  --sf-border-width: 1px;
+  --sf-border-width-2: 2px;
+  --sf-control-h: 2.75rem; /* 44px touch target */
+  --sf-control-pad-x: var(--sf-space-4);
+}
+
+/* ---- Focus ring (WCAG 2.4.13 / 1.4.11; survives forced-colors) ---- */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: var(--sf-border-width-2) solid var(--sf-color-focus-ring);
+  outline-offset: var(--sf-border-width-2);
+  border-radius: var(--sf-radius-sm);
+}
+
+/* ========================================================================
+   Layout / chrome
+   ===================================================================== */
+.sf-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--sf-space-6) var(--sf-space-6) var(--sf-space-8);
+  color: var(--sf-color-fg);
+  font-family: var(--sf-font-sans);
+}
+
+.sf-page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sf-space-2);
+  margin-bottom: var(--sf-space-4);
+  padding-bottom: var(--sf-space-4);
+  border-bottom: var(--sf-border-width) solid var(--sf-color-border);
+}
+.sf-page-head h1 {
+  margin: 0;
+  font-size: var(--sf-text-xl);
+  line-height: var(--sf-leading-xl);
+  font-weight: var(--sf-weight-semibold);
+  color: var(--sf-color-fg);
+}
+
+.sf-eyebrow {
+  font-family: var(--sf-font-mono);
+  font-size: var(--sf-text-xs);
+  line-height: var(--sf-leading-xs);
+  font-weight: var(--sf-weight-medium);
+  letter-spacing: var(--sf-tracking-caps);
+  text-transform: uppercase;
+  color: var(--sf-color-muted-fg);
+}
+
+.sf-login {
+  max-width: 380px;
+  margin: 12vh auto;
+  padding: var(--sf-space-6);
+  background: var(--sf-color-surface);
+  border: var(--sf-border-width) solid var(--sf-color-border);
+  border-radius: var(--sf-radius-lg);
+}
+.sf-login h1 {
+  margin: 0 0 var(--sf-space-4);
+  font-size: var(--sf-text-2xl);
+  line-height: var(--sf-leading-2xl);
+  font-weight: var(--sf-weight-semibold);
+}
+.sf-login form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sf-space-2);
+}
+.sf-login label {
+  margin-top: var(--sf-space-2);
+  font-size: var(--sf-text-sm);
+  font-weight: var(--sf-weight-medium);
+  color: var(--sf-color-fg);
+}
+.sf-login input {
+  font: inherit;
+  font-size: var(--sf-text-base);
+  color: var(--sf-color-fg);
+  background: var(--sf-color-surface);
+  height: var(--sf-control-h);
+  padding: var(--sf-space-2) var(--sf-space-3);
+  border: var(--sf-border-width) solid var(--sf-color-input-border);
+  border-radius: var(--sf-radius-sm);
+}
+.sf-login button[type="submit"] {
+  height: var(--sf-control-h);
+  margin-top: var(--sf-space-3);
+  padding: 0 var(--sf-control-pad-x);
+  font: inherit;
+  font-weight: var(--sf-weight-medium);
+  color: var(--sf-color-accent-on);
+  background: var(--sf-color-accent-hover); /* 4.86:1 — AA control text */
+  border: var(--sf-border-width) solid var(--sf-color-accent-hover);
+  border-radius: var(--sf-radius-sm);
+  cursor: pointer;
+}
+.sf-login button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.sf-catalog {
+  list-style: none;
+  margin: var(--sf-space-4) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--sf-space-4);
+}
+.sf-catalog a {
+  display: block;
+  padding: var(--sf-space-4);
+  background: var(--sf-color-surface);
+  border: var(--sf-border-width) solid var(--sf-color-border);
+  border-radius: var(--sf-radius-md);
+  text-decoration: none;
+  color: inherit;
+}
+.sf-catalog a:hover {
+  border-color: var(--sf-color-accent);
+}
+
+/* ========================================================================
+   Data — table
+   ===================================================================== */
+.sf-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--sf-color-surface);
+  color: var(--sf-color-fg);
+  font-size: var(--sf-text-sm);
+  line-height: var(--sf-leading-sm);
+}
+.sf-table th,
+.sf-table td {
+  text-align: left;
+  padding: var(--sf-space-3) var(--sf-space-4);
+  border-bottom: var(--sf-border-width) solid var(--sf-color-border);
+}
+.sf-table thead th {
+  font-family: var(--sf-font-mono);
+  font-size: var(--sf-text-xs);
+  font-weight: var(--sf-weight-medium);
+  letter-spacing: var(--sf-tracking-caps);
+  text-transform: uppercase;
+  color: var(--sf-neutral-500);
+  border-bottom: var(--sf-border-width) solid var(--sf-color-border-strong);
+}
+.sf-table th button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--sf-space-1);
+}
+.sf-table tbody tr:hover {
+  background: var(--sf-color-surface-hover);
+}
+
+/* ========================================================================
+   Data — spec sheet (read-only detail)
+   ===================================================================== */
+.sf-spec {
+  margin: var(--sf-space-4) 0 0;
+  display: grid;
+  gap: 0;
+}
+.sf-spec-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--sf-space-3);
+  padding: var(--sf-space-2) 0;
+  border-bottom: var(--sf-border-width) solid var(--sf-color-border);
+}
+.sf-spec-key {
+  margin: 0;
+  font-size: var(--sf-text-sm);
+  font-weight: var(--sf-weight-medium);
+  color: var(--sf-color-muted-fg);
+}
+.sf-spec-val {
+  margin: 0;
+  font-size: var(--sf-text-sm);
+  color: var(--sf-color-fg);
+}
+
+/* ========================================================================
+   Forms
+   ===================================================================== */
+.sf-form {
+  display: grid;
+  gap: var(--sf-space-5);
+  max-width: 720px;
+  margin-top: var(--sf-space-4);
+}
+.sf-form-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--sf-space-2);
+  align-items: start;
+}
+.sf-form-label {
+  padding-top: var(--sf-space-2);
+  font-size: var(--sf-text-sm);
+  font-weight: var(--sf-weight-medium);
+  color: var(--sf-color-fg);
+}
+.sf-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sf-space-1);
+}
+.sf-form-field .sf-input,
+.sf-form-field .sf-select,
+.sf-form-field .sf-textarea {
+  width: 100%;
+}
+
+.sf-input,
+.sf-select,
+.sf-textarea {
+  font: inherit;
+  font-size: var(--sf-text-base);
+  color: var(--sf-color-fg);
+  background: var(--sf-color-surface);
+  padding: var(--sf-space-2) var(--sf-space-3);
+  border: var(--sf-border-width) solid var(--sf-color-input-border);
+  border-radius: var(--sf-radius-sm);
+}
+.sf-input,
+.sf-select {
+  height: var(--sf-control-h);
+}
+.sf-textarea {
+  min-height: var(--sf-control-h);
+}
+.sf-input:hover,
+.sf-select:hover,
+.sf-textarea:hover {
+  border-color: var(--sf-color-input-border-hover);
+}
+.sf-input::placeholder,
+.sf-textarea::placeholder {
+  color: var(--sf-color-muted-fg);
+}
+.sf-input[aria-invalid="true"],
+.sf-select[aria-invalid="true"],
+.sf-textarea[aria-invalid="true"] {
+  border-color: var(--sf-color-danger-border);
+}
+
+.sf-req {
+  color: var(--sf-color-danger);
+  font-size: var(--sf-text-xs);
+}
+
+/* ========================================================================
+   Actions / buttons
+   ===================================================================== */
+.sf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--sf-control-h);
+  padding: 0 var(--sf-control-pad-x);
+  font: inherit;
+  font-size: var(--sf-text-base);
+  font-weight: var(--sf-weight-medium);
+  color: var(--sf-color-fg);
+  background: var(--sf-color-surface);
+  border: var(--sf-border-width) solid var(--sf-color-border-strong);
+  border-radius: var(--sf-radius-sm);
+  text-decoration: none;
+  cursor: pointer;
+}
+.sf-btn:hover {
+  border-color: var(--sf-color-accent);
+  color: var(--sf-color-accent-fg);
+}
+.sf-btn:active {
+  background: var(--sf-neutral-100);
+}
+.sf-btn:disabled,
+.sf-btn[aria-disabled="true"] {
+  color: var(--sf-color-muted-fg);
+  border-color: var(--sf-color-border);
+  opacity: 0.6;
+  cursor: default;
+}
+
+.sf-btn-danger {
+  color: var(--sf-color-danger);
+  border-color: var(--sf-color-danger-border);
+}
+.sf-btn-danger:hover {
+  background: var(--sf-color-danger-bg);
+  color: var(--sf-color-danger-hover);
+  border-color: var(--sf-color-danger-border);
+}
+
+.sf-actions {
+  display: flex;
+  gap: var(--sf-space-3);
+}
+.sf-form-actions {
+  display: flex;
+  gap: var(--sf-space-2);
+  margin-top: var(--sf-space-4);
+}
+.sf-form-actions button[type="submit"] {
+  height: var(--sf-control-h);
+  padding: 0 var(--sf-control-pad-x);
+  font: inherit;
+  font-weight: var(--sf-weight-medium);
+  color: var(--sf-color-accent-on);
+  background: var(--sf-color-accent-hover); /* 4.86:1 — AA for control text */
+  border: var(--sf-border-width) solid var(--sf-color-accent-hover);
+  border-radius: var(--sf-radius-sm);
+  cursor: pointer;
+}
+.sf-form-actions button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.sf-row-actions {
+  display: inline-flex;
+  gap: var(--sf-space-2);
+}
+.sf-link-btn,
+.sf-row-actions a {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--sf-color-accent-fg);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.sf-link-btn:hover,
+.sf-row-actions a:hover {
+  color: var(--sf-color-accent-hover);
+}
+.sf-link-btn:disabled {
+  color: var(--sf-color-muted-fg);
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ========================================================================
+   Text / state
+   ===================================================================== */
+.sf-muted {
+  color: var(--sf-color-muted-fg);
+}
+.sf-mono {
+  font-family: var(--sf-font-mono);
+  font-size: var(--sf-text-sm);
+}
+.sf-empty {
+  padding: var(--sf-space-6);
+  text-align: center;
+  font-size: var(--sf-text-sm);
+  color: var(--sf-color-muted-fg);
+}
+.sf-error {
+  color: var(--sf-color-danger);
+  font-size: var(--sf-text-sm);
+}
+.sf-form .sf-error,
+.sf-error[role="alert"] {
+  padding: var(--sf-space-3) var(--sf-space-4);
+  background: var(--sf-color-danger-bg);
+  border-left: var(--sf-border-width-2) solid var(--sf-color-danger-border);
+}
+.sf-composite {
+  font-family: var(--sf-font-mono);
+  font-size: var(--sf-text-sm);
+  color: var(--sf-color-muted-fg);
+}
+
+/* ========================================================================
+   Accessibility
+   ===================================================================== */
+.sf-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
