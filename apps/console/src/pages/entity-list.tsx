@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { toast } from "sonner"
 import { findKanbanField, listColumns } from "@schemaforge/client"
@@ -14,6 +14,12 @@ import {
 } from "@schemaforge/react"
 
 const PAGE_SIZES = [25, 50, 100, 200] as const
+
+// Parse an API sort string ("-expected_close" / "name") into field + direction.
+function parseSort(s: string | undefined): { field: string; dir: SortDir } | null {
+  if (!s) return null
+  return s.startsWith("-") ? { field: s.slice(1), dir: "desc" } : { field: s, dir: "asc" }
+}
 
 // Entity browser: page-local sort/filter/pager state, data from the shared
 // hooks, the shared EntityTable for presentation. New + per-row Edit/Delete are
@@ -43,6 +49,20 @@ export function EntityListPage() {
   }, [filterInput])
 
   const meta = useSchema(schema)
+
+  // Seed the sort from the schema's `@dashboard(sort_default)` once per schema
+  // (when its description first arrives, and again on navigation to a different
+  // schema). Background refetches of the same schema don't clobber an explicit
+  // sort the operator has since chosen; from there the header toggle owns it.
+  const seededSchema = useRef<string | undefined>(undefined)
+  useEffect(() => {
+    if (!meta.data || seededSchema.current === schema) return
+    seededSchema.current = schema
+    const d = parseSort(meta.data.dashboard?.sortDefault)
+    setSortField(d?.field ?? null)
+    setSortDir(d?.dir ?? "asc")
+    setOffset(0)
+  }, [schema, meta.data])
   const filterableFields = (meta.data?.fields ?? []).filter((f) => f.kind === "text" || f.kind === "enum")
   const effectiveFilterField = filterField || filterableFields[0]?.name || ""
   const filters =
