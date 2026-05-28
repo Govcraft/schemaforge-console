@@ -29,6 +29,56 @@ body {
   color: var(--sf-color-muted-fg);
 }
 
+/* List-page chrome: toolbar (filter + page-size) above the table, pager below.
+   These bracket the shared .sf-table-wrap so the borders read as one panel. */
+.sf-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sf-space-2);
+  margin-top: var(--sf-space-4);
+  padding: var(--sf-space-2) var(--sf-space-3);
+  border: var(--sf-border-width) solid var(--sf-color-border);
+  border-bottom: 0;
+  border-radius: var(--sf-radius-sm) var(--sf-radius-sm) 0 0;
+  background: var(--sf-color-bg);
+}
+.sf-toolbar + .sf-table-wrap {
+  border-radius: 0;
+}
+.sf-grow {
+  flex: 1;
+}
+.sf-toolbar-select {
+  height: auto;
+  padding: 6px 8px;
+  font-size: var(--sf-text-sm);
+}
+.sf-toolbar-filter {
+  height: auto;
+  width: 260px;
+  max-width: 40vw;
+  padding: 6px 10px;
+  font-size: var(--sf-text-sm);
+}
+.sf-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sf-space-2);
+  padding: var(--sf-space-2) var(--sf-space-3);
+  border: var(--sf-border-width) solid var(--sf-color-border);
+  border-top: 0;
+  border-radius: 0 0 var(--sf-radius-sm) var(--sf-radius-sm);
+  background: var(--sf-color-bg);
+  font-size: var(--sf-text-sm);
+  color: var(--sf-color-muted-fg);
+}
+.sf-pager .sf-btn {
+  height: auto;
+  padding: 6px 12px;
+  font-size: var(--sf-text-sm);
+}
+
 /* ========================================================================
    App shell — grid: dark rail + topbar + scrolling main
    ===================================================================== */
