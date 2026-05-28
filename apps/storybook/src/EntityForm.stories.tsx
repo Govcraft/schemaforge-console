@@ -13,7 +13,14 @@ const withWriteDenied: FieldMeta[] = [
 const meta: Meta<typeof EntityForm> = {
   title: "Organisms/EntityForm",
   component: EntityForm,
-  args: { onSubmit: (values) => console.log("submit", values) },
+  // The console always wires onCancel (→ navigate back), so the stories do too:
+  // EntityForm renders the Cancel button only when given onCancel, and a story
+  // that omits it under-represents the shipped form. Override to `undefined` in
+  // a story to document the no-cancel (embedded/inline) variant.
+  args: {
+    onSubmit: (values) => console.log("submit", values),
+    onCancel: () => console.log("cancel"),
+  },
 }
 export default meta
 type Story = StoryObj<typeof EntityForm>

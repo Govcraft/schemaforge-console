@@ -154,6 +154,7 @@ export const EditingParent: Story = {
         initialValues={orderData}
         submitLabel="Save"
         onSubmit={(values) => console.log("save order", values)}
+        onCancel={() => console.log("cancel")}
       />
     ),
   },
