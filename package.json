@@ -1,0 +1,30 @@
+{
+  "name": "schemaforge-console",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Schema-agnostic web ops console for SchemaForge + the reusable @schemaforge/client and @schemaforge/react packages it is built from.",
+  "license": "(MIT OR Apache-2.0)",
+  "author": "Roland Rodriguez <roland@govcraft.ai>",
+  "type": "module",
+  "packageManager": "pnpm@10.31.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm --filter \"./packages/*\" build && pnpm --filter \"./apps/*\" build",
+    "build:packages": "pnpm --filter \"./packages/*\" build",
+    "typecheck": "pnpm --filter \"./packages/*\" typecheck && pnpm --filter \"./apps/*\" typecheck",
+    "dev": "pnpm --filter @schemaforge/console dev",
+    "storybook": "pnpm --filter @schemaforge/storybook storybook",
+    "clean": "pnpm -r exec rm -rf dist node_modules/.vite storybook-static",
+    "changeset": "changeset",
+    "version": "changeset version"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "typescript": "^5.6.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  }
+}
