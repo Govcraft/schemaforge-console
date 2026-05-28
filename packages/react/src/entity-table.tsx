@@ -17,13 +17,13 @@
 import { type ReactNode } from "react"
 import {
   canReadField,
-  formatFieldValue,
   type EntityPermissions,
   type EntityRow,
   type FieldMeta,
   type SchemaPermissions,
 } from "@schemaforge/client"
 import { useForgeNav, useForgeRoles } from "./context"
+import { FieldValue } from "./field-value"
 
 export type SortDir = "asc" | "desc"
 
@@ -56,9 +56,10 @@ export type EntityTableProps = {
 }
 
 function defaultCell(field: FieldMeta, value: unknown): ReactNode {
-  if (value === null || value === undefined || value === "") return <span className="sf-muted">—</span>
-  // Shared formatter: datetimes, arrays, money, booleans, files — never raw JSON.
-  return formatFieldValue(value, field)
+  // Shared widget-aware renderer: badges, bars, chips, links, swatches, dates,
+  // money, arrays, booleans — never a raw ISO string or JSON blob. Empties
+  // render as the muted em-dash inside FieldValue.
+  return <FieldValue field={field} value={value} />
 }
 
 function shortId(id: string): string {

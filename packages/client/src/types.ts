@@ -72,6 +72,24 @@ export type FileMeta = {
   access: "presigned" | "proxied"
 }
 
+/** `@list(...)` rendering hint: `primary` = headline cell, `column` = force
+ *  inclusion, `hidden` = suppress an otherwise-shown field. */
+export type ListHint = "primary" | "column" | "hidden"
+
+/** Closed `@enum_colors` palette — mirrors `EnumColor` in schema-forge-core.
+ *  Maps each token to a semantic badge color. */
+export type EnumColor =
+  | "neutral"
+  | "gray"
+  | "red"
+  | "amber"
+  | "green"
+  | "blue"
+  | "purple"
+  | "violet"
+  | "teal"
+  | "rose"
+
 export type FieldMeta = {
   name: string
   kind: FieldKind
@@ -85,6 +103,12 @@ export type FieldMeta = {
   format?: string
   accessRead?: string[]
   accessWrite?: string[]
+  /** `@kanban_column` — this enum field is the kanban grouping column. */
+  kanbanColumn?: boolean
+  /** `@list(primary|column|hidden)` — list-view rendering hint. */
+  listHint?: ListHint
+  /** `@enum_colors` — maps each enum variant to a semantic badge color. */
+  enumColors?: Record<string, EnumColor>
 }
 
 /** A flattened entity row; `__permissions` carries the server's Cedar decision. */

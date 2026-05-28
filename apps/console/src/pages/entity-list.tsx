@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { toast } from "sonner"
+import { listColumns } from "@schemaforge/client"
 import {
   ConfirmDialog,
   EntityTable,
@@ -58,7 +59,12 @@ export function EntityListPage() {
       </div>
     )
 
-  const fields = (meta.data?.fields ?? []).filter((f) => f.kind !== "composite")
+  // Curate columns via the `@list` hints (primary headline, forced columns,
+  // hidden suppressed) with a sane default cap so wide schemas don't render a
+  // 19-column wall. The full field set is still reachable on the detail page.
+  const fields = listColumns(meta.data?.fields ?? [], { displayField: meta.data?.displayField }).map(
+    (c) => c.field,
+  )
   const canCreate = rows.data?.permissions?.create ?? false
   const total = rows.data?.count ?? 0
   const pageStart = total === 0 ? 0 : offset + 1

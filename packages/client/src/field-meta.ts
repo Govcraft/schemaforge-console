@@ -4,7 +4,28 @@
 // the bit of "SchemaForge IP" every consuming UI needs and none should
 // re-implement: raw FieldType enum -> normalized FieldMeta.
 
-import type { FieldMeta, FieldResponse, RawFieldType, SchemaResponse } from "./types"
+import type {
+  EnumColor,
+  FieldMeta,
+  FieldResponse,
+  ListHint,
+  RawFieldType,
+  SchemaResponse,
+} from "./types"
+
+const LIST_HINTS: readonly ListHint[] = ["primary", "column", "hidden"]
+const ENUM_COLORS: readonly EnumColor[] = [
+  "neutral",
+  "gray",
+  "red",
+  "amber",
+  "green",
+  "blue",
+  "purple",
+  "violet",
+  "teal",
+  "rose",
+]
 
 export function humanizeBytes(n: number): string {
   if (n < 1024) return `${n} B`
@@ -81,6 +102,44 @@ export function isSystemSchema(schema: SchemaResponse): boolean {
   return (schema.annotations ?? []).some((a) => annotationTag(a) === "system")
 }
 
+/** True if any field carries `@kanban_column`. */
+export function getKanbanColumn(annotations: unknown[]): boolean {
+  return annotations.some((a) => annotationTag(a) === "kanbancolumn")
+}
+
+/** Extract the `@list(...)` hint, validated against the closed vocabulary. */
+export function getListHint(annotations: unknown[]): ListHint | undefined {
+  for (const a of annotations) {
+    if (annotationTag(a) === "list") {
+      const h = (a as { hint?: unknown }).hint
+      if (typeof h === "string" && (LIST_HINTS as readonly string[]).includes(h)) {
+        return h as ListHint
+      }
+    }
+  }
+  return undefined
+}
+
+/** Extract `@enum_colors` as a variant→color map, dropping any color token
+ *  outside the closed palette so a bad value can't reach the UI. */
+export function getEnumColors(annotations: unknown[]): Record<string, EnumColor> | undefined {
+  for (const a of annotations) {
+    if (annotationTag(a) === "enumcolors") {
+      const raw = (a as { colors?: unknown }).colors
+      if (raw && typeof raw === "object") {
+        const out: Record<string, EnumColor> = {}
+        for (const [variant, color] of Object.entries(raw as Record<string, unknown>)) {
+          if (typeof color === "string" && (ENUM_COLORS as readonly string[]).includes(color)) {
+            out[variant] = color as EnumColor
+          }
+        }
+        if (Object.keys(out).length > 0) return out
+      }
+    }
+  }
+  return undefined
+}
+
 export function toFieldMeta(f: FieldResponse): FieldMeta {
   const annotations = f.annotations ?? []
   const access = getFieldAccess(annotations)
@@ -91,6 +150,9 @@ export function toFieldMeta(f: FieldResponse): FieldMeta {
     format: getFieldFormat(annotations),
     accessRead: access?.read,
     accessWrite: access?.write,
+    kanbanColumn: getKanbanColumn(annotations) || undefined,
+    listHint: getListHint(annotations),
+    enumColors: getEnumColors(annotations),
   }
   const raw = f.field_type
   switch (raw.type) {
