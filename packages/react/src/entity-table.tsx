@@ -17,6 +17,7 @@
 import { type ReactNode } from "react"
 import {
   canReadField,
+  formatFieldValue,
   type EntityPermissions,
   type EntityRow,
   type FieldMeta,
@@ -54,10 +55,10 @@ export type EntityTableProps = {
   classes?: EntityTableClasses
 }
 
-function defaultCell(_field: FieldMeta, value: unknown): ReactNode {
+function defaultCell(field: FieldMeta, value: unknown): ReactNode {
   if (value === null || value === undefined || value === "") return <span className="sf-muted">—</span>
-  if (typeof value === "object") return <span className="sf-mono">{JSON.stringify(value)}</span>
-  return String(value)
+  // Shared formatter: datetimes, arrays, money, booleans, files — never raw JSON.
+  return formatFieldValue(value, field)
 }
 
 function shortId(id: string): string {

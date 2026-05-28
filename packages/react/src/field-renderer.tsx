@@ -7,7 +7,7 @@
 // <label htmlFor> for SC 1.3.1 / 3.3.2.
 
 import { type ReactNode } from "react"
-import type { FieldMeta } from "@schemaforge/client"
+import { formatFieldValue, type FieldMeta } from "@schemaforge/client"
 import { RelationSelect } from "./relation-select"
 
 export type FieldRendererProps = {
@@ -33,8 +33,10 @@ function ReadOnly({ field, value }: { field: FieldMeta; value: unknown }): React
       </div>
     )
   }
-  if (typeof value === "object") return <span className="sf-mono">{JSON.stringify(value)}</span>
-  return <>{String(value)}</>
+  // Everything else (scalars, arrays, datetimes, money, files, json) goes
+  // through the shared formatter so a date reads "Feb 28, 2025" and an array
+  // reads "a, b, c" instead of an ISO string or raw JSON.
+  return <>{formatFieldValue(value, field)}</>
 }
 
 export function FieldRenderer({ field, value, onChange, readOnly, id }: FieldRendererProps): ReactNode {
