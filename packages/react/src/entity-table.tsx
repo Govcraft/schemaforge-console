@@ -15,8 +15,14 @@
 // via `renderCell`. Restyle = retheme, not fork.
 
 import { type ReactNode } from "react"
-import type { EntityPermissions, EntityRow, FieldMeta, SchemaPermissions } from "@schemaforge/client"
-import { useForgeNav } from "./context"
+import {
+  canReadField,
+  type EntityPermissions,
+  type EntityRow,
+  type FieldMeta,
+  type SchemaPermissions,
+} from "@schemaforge/client"
+import { useForgeNav, useForgeRoles } from "./context"
 
 export type SortDir = "asc" | "desc"
 
@@ -29,7 +35,9 @@ export type EntityTableClasses = {
 
 export type EntityTableProps = {
   schema: string
-  /** Columns to show — already filtered for read access + non-composite by the host/hook. */
+  /** Candidate columns. The organism drops any the current roles cannot read
+   *  (`@field_access`), so the host passes the full non-composite set and need
+   *  not re-implement read gating. */
   fields: FieldMeta[]
   rows: EntityRow[]
   sortField: string | null
@@ -70,12 +78,14 @@ export function EntityTable({
   classes,
 }: EntityTableProps) {
   const { Link } = useForgeNav()
+  const roles = useForgeRoles()
+  const visibleFields = fields.filter((f) => canReadField(f, roles))
   return (
     <table className={classes?.table ?? "sf-table"}>
       <thead>
         <tr>
           <th className={classes?.th}>id</th>
-          {fields.map((f) => {
+          {visibleFields.map((f) => {
             const active = sortField === f.name
             const arrow = active ? (sortDir === "asc" ? " ↑" : " ↓") : ""
             const ariaSort: "ascending" | "descending" | "none" = active
@@ -107,7 +117,7 @@ export function EntityTable({
             <td className={classes?.td}>
               <Link to={detailHref(row.id)}>{shortId(row.id)}</Link>
             </td>
-            {fields.map((f) => (
+            {visibleFields.map((f) => (
               <td key={f.name} className={classes?.td}>
                 {renderCell(f, row[f.name], row)}
               </td>
@@ -117,7 +127,7 @@ export function EntityTable({
         ))}
         {rows.length === 0 ? (
           <tr>
-            <td colSpan={fields.length + 2}>
+            <td colSpan={visibleFields.length + 2}>
               <div className="sf-empty">No {schema} records</div>
             </td>
           </tr>

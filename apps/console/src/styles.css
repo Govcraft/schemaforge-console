@@ -47,3 +47,31 @@ body { margin: 0; font-family: var(--sf-sans); color: var(--sf-fg); background: 
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
+
+/* Page header / actions */
+.sf-page-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 4px; }
+.sf-page-head h1 { margin: 0; }
+.sf-actions { display: flex; gap: 8px; }
+.sf-btn { display: inline-flex; align-items: center; padding: 8px 14px; border: 1px solid var(--sf-border); border-radius: 4px; background: var(--sf-bg); color: inherit; text-decoration: none; cursor: pointer; font: inherit; }
+.sf-btn:hover { border-color: var(--sf-accent); }
+.sf-btn-danger { color: #b91c1c; border-color: #f3c4c4; }
+.sf-row-actions { display: inline-flex; gap: 10px; }
+.sf-row-actions a, .sf-link-btn { color: var(--sf-accent); text-decoration: none; background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
+.sf-link-btn:disabled { opacity: 0.5; cursor: default; }
+.sf-req { color: var(--sf-accent); }
+
+/* SpecSheet (read-only detail) */
+.sf-spec { margin: 16px 0 0; display: grid; gap: 0; }
+.sf-spec-row { display: grid; grid-template-columns: 200px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--sf-border); }
+.sf-spec-key { font-family: var(--sf-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--sf-muted); margin: 0; }
+.sf-spec-val { margin: 0; }
+
+/* EntityForm */
+.sf-form { display: grid; gap: 4px; max-width: 720px; margin-top: 16px; }
+.sf-form-row { display: grid; grid-template-columns: 200px 1fr; gap: 12px; align-items: start; padding: 8px 0; }
+.sf-form-label { font-family: var(--sf-mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--sf-muted); padding-top: 8px; }
+.sf-form-field { display: flex; flex-direction: column; gap: 4px; }
+.sf-form-field .sf-input, .sf-form-field .sf-select, .sf-form-field .sf-textarea { width: 100%; }
+.sf-form-actions { display: flex; gap: 8px; margin-top: 16px; }
+.sf-form-actions button[type="submit"] { background: var(--sf-accent); color: #fff; border: 1px solid var(--sf-accent); padding: 8px 16px; border-radius: 4px; cursor: pointer; font: inherit; }
+.sf-form-actions button:disabled { opacity: 0.6; cursor: default; }

@@ -42,6 +42,15 @@ export function useEntityList(schema: string | undefined, params: ListEntitiesPa
   })
 }
 
+export function useEntity(schema: string | undefined, id: string | undefined) {
+  const client = useForgeClient()
+  return useQuery<EntityRow>({
+    queryKey: ["forge", "entity", schema, id],
+    queryFn: () => client.getEntity(schema!, id!),
+    enabled: Boolean(schema && id),
+  })
+}
+
 /** Headless relation-options source: powers RelationSelect, but a host can use
  *  it to build its own combobox. Labels each option by the target schema's
  *  @display field, falling back to the id. */
