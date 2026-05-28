@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react"
 import type { EntityRow, FieldMeta } from "@schemaforge/client"
-import { ChildCollectionSection, EntityParentChild } from "@schemaforge/react"
+import { ChildCollectionSection, EntityForm, EntityParentChild, SpecSheet } from "@schemaforge/react"
 
 // An illustrative master-detail: an Order with LineItem and Shipment children.
 // Each child schema has a relation_one("order") that findChildRelations would
@@ -50,9 +50,32 @@ type Story = StoryObj<typeof EntityParentChild>
 const parentArgs = {
   parentSchema: "Order",
   parentId: orderData.id,
-  parentFields: orderFields,
-  parentData: orderData,
+  parent: <SpecSheet fields={orderFields} data={orderData} />,
 }
+
+// The same shell, but the parent slot holds an EntityForm instead of a
+// SpecSheet — the child collections sit beneath the editable parent.
+const childSections = (
+  <>
+    <ChildCollectionSection
+      schema="LineItem"
+      fields={lineItemFields}
+      rows={lineItemRows}
+      permissions={{ create: true }}
+      detailHref={(id) => `/LineItem/${id}`}
+      createHref="/LineItem/new?order=order_01hzx"
+      renderRowActions={(_row, perms) => (perms?.update ? <a href="#edit">Edit</a> : null)}
+    />
+    <ChildCollectionSection
+      schema="Shipment"
+      fields={shipmentFields}
+      rows={shipmentRows}
+      permissions={{ create: true }}
+      detailHref={(id) => `/Shipment/${id}`}
+      createHref="/Shipment/new?order=order_01hzx"
+    />
+  </>
+)
 
 export const Default: Story = {
   args: parentArgs,
@@ -117,6 +140,24 @@ export const ChildError: Story = {
       />
     </EntityParentChild>
   ),
+}
+
+// The parent slot holds an EntityForm: edit the parent in place with its child
+// collections still visible below (the PayloadCMS master-detail edit pattern).
+export const EditingParent: Story = {
+  args: {
+    ...parentArgs,
+    detailsLabel: "Edit",
+    parent: (
+      <EntityForm
+        fields={orderFields}
+        initialValues={orderData}
+        submitLabel="Save"
+        onSubmit={(values) => console.log("save order", values)}
+      />
+    ),
+  },
+  render: (args) => <EntityParentChild {...args}>{childSections}</EntityParentChild>,
 }
 
 // No schema-level create permission → the "Add" affordance is withheld.

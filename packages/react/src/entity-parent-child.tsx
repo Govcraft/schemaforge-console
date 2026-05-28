@@ -1,13 +1,15 @@
 // @schemaforge/react — EntityParentChild: master-detail organism.
 //
-// This organism is a COMPOSITION of the others: the parent renders through
-// SpecSheet, each related collection through EntityTable. That is the design
-// statement — organisms stack, so a parent-with-children view is not a new
-// rendering surface to maintain, just an arrangement of the ones we already
-// ship (and already made 508/WCAG-conformant).
+// This organism is a COMPOSITION of the others: the host fills the parent slot
+// with SpecSheet (view) or EntityForm (edit), and each related collection
+// renders through EntityTable. That is the design statement — organisms stack,
+// so a parent-with-children view is not a new rendering surface to maintain,
+// just an arrangement of the ones we already ship (and already made 508/WCAG-
+// conformant). The parent being a slot is what makes "edit the parent in place"
+// (the PayloadCMS pattern) fall out for free — pass an EntityForm instead.
 //
 // Split into two presentational pieces:
-//   - EntityParentChild  — the page shell: parent details + a slot for sections.
+//   - EntityParentChild  — the page shell: a labeled parent slot + child sections.
 //   - ChildCollectionSection — one related collection (heading, "Add", table).
 //
 // The number of child collections is data-driven (discovered via
@@ -25,7 +27,6 @@ import {
   type SchemaPermissions,
 } from "@schemaforge/client"
 import { EntityTable, type SortDir } from "./entity-table"
-import { SpecSheet } from "./spec-sheet"
 import { useForgeNav } from "./context"
 
 // ---------------------------------------------------------------------------
@@ -41,10 +42,11 @@ export type EntityParentChildClasses = {
 export type EntityParentChildProps = {
   parentSchema: string
   parentId: string
-  /** Parent field set; SpecSheet drops any the current role cannot read. */
-  parentFields: FieldMeta[]
-  parentData: EntityRow
-  /** Heading for the parent details section. */
+  /** The parent content. Typically <SpecSheet> for a read view or <EntityForm>
+   *  for an edit view — the organism owns only the labeled region and layout,
+   *  so swapping read for edit is the host's call. */
+  parent: ReactNode
+  /** Heading for the parent section (e.g. "Details" or "Edit"). */
   detailsLabel?: string
   /** Child collection sections — typically <ChildCollectionSection> connected
    *  to data by the host, one per discovered relation. */
@@ -55,8 +57,7 @@ export type EntityParentChildProps = {
 export function EntityParentChild({
   parentSchema,
   parentId,
-  parentFields,
-  parentData,
+  parent,
   detailsLabel = "Details",
   children,
   classes,
@@ -69,7 +70,7 @@ export function EntityParentChild({
           {detailsLabel}
           <span className="sf-sr-only">{` for ${parentSchema} ${parentId}`}</span>
         </h2>
-        <SpecSheet fields={parentFields} data={parentData} />
+        {parent}
       </section>
       {children}
     </div>

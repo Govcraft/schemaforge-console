@@ -3,6 +3,7 @@ import type { ChildRelation } from "@schemaforge/client"
 import {
   ChildCollectionSection,
   EntityParentChild,
+  SpecSheet,
   useChildRelations,
   useEntity,
   useEntityList,
@@ -90,8 +91,7 @@ export function EntityDetailPage() {
       <EntityParentChild
         parentSchema={schema}
         parentId={id}
-        parentFields={meta.data?.fields ?? []}
-        parentData={data}
+        parent={<SpecSheet fields={meta.data?.fields ?? []} data={data} />}
       >
         {(relations.data ?? []).map((rel) => (
           <ChildSection key={`${rel.schema}.${rel.foreignKey}`} relation={rel} parentId={id} />
