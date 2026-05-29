@@ -89,7 +89,7 @@ function pickIcon(name: string): LucideIcon {
 }
 
 // ---- Sidebar -------------------------------------------------------------
-function Sidebar({ theme, onToggleTheme }: { theme: Theme; onToggleTheme: () => void }) {
+function Sidebar() {
   const location = useLocation()
   const { data: schemas } = useSchemas()
   const app = (schemas ?? []).filter((s) => !isSystemSchema(s))
@@ -122,26 +122,12 @@ function Sidebar({ theme, onToggleTheme }: { theme: Theme; onToggleTheme: () => 
         {app.length === 0 ? <div className="sf-rail-label">No schemas yet.</div> : null}
       </div>
 
-      <div>
-        <div style={{ padding: "10px 12px 0" }}>
-          <button
-            type="button"
-            className="sf-rail-link"
-            onClick={onToggleTheme}
-            aria-pressed={theme === "dark"}
-            aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-          >
-            {theme === "dark" ? <Sun size={14} aria-hidden="true" /> : <Moon size={14} aria-hidden="true" />}
-            <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
-          </button>
+      <dl className="sf-rail-foot">
+        <div className="sf-rail-foot-line">
+          <dt>API</dt>
+          <dd>/api/v1/forge</dd>
         </div>
-        <dl className="sf-rail-foot">
-          <div className="sf-rail-foot-line">
-            <dt>API</dt>
-            <dd>/api/v1/forge</dd>
-          </div>
-        </dl>
-      </div>
+      </dl>
     </aside>
   )
 }
@@ -168,8 +154,9 @@ function TenantControl() {
     const sep = value.indexOf(":")
     if (sep <= 0) return
     session.setActiveTenant(value.slice(0, sep), value.slice(sep + 1))
-    // Hard-reload so no prior-tenant data lingers in the query cache.
-    window.location.assign("/")
+    // Hard-reload so no prior-tenant data lingers in the query cache. Use the
+    // Vite base (mount point) so we land on the console root, not the origin.
+    window.location.assign(import.meta.env.BASE_URL)
   }
 
   if (chain.length >= 2) {
@@ -240,7 +227,8 @@ function Topbar({ theme, onToggleTheme }: { theme: Theme; onToggleTheme: () => v
 
   function signOut() {
     session.signOut()
-    window.location.assign("/login")
+    // Mount-relative: BASE_URL ends with "/", so this is /console/login.
+    window.location.assign(`${import.meta.env.BASE_URL}login`)
   }
 
   return (
@@ -303,7 +291,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <a href="#sf-main" className="sf-skip-link">
         Skip to main content
       </a>
-      <Sidebar theme={theme} onToggleTheme={toggleTheme} />
+      <Sidebar />
       <Topbar theme={theme} onToggleTheme={toggleTheme} />
       <main className="sf-shell-main" id="sf-main" tabIndex={-1}>
         {children}
