@@ -34,7 +34,14 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build console
-        run: pnpm --filter @schemaforge/console build
+        # The console resolves @schemaforge/client and @schemaforge/react from
+        # their built dist, so build those workspace deps first (in order),
+        # then the app. A fresh checkout has no dist, so building only the app
+        # fails to resolve the workspace packages.
+        run: |
+          pnpm --filter @schemaforge/client build
+          pnpm --filter @schemaforge/react build
+          pnpm --filter @schemaforge/console build
 
       - name: Package dist
         run: |
