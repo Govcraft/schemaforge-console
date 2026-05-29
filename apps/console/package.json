@@ -1,6 +1,6 @@
 {
   "name": "@schemaforge/console",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "description": "Standalone schema-agnostic web ops console for SchemaForge.",
   "license": "(MIT OR Apache-2.0)",
