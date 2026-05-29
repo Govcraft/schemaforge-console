@@ -1,0 +1,70 @@
+name: Release
+
+# Publishes the prebuilt ops-console bundle as a signed release artifact that
+# the `schemaforge` binary embeds at build time (see that repo's release.yml,
+# which verifies this signature before bundling). Mirrors schemaforge's own
+# keyless signing: cosign sign-blob over a SHA256SUMS manifest, sigstore via
+# GitHub OIDC.
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+*"
+
+permissions:
+  contents: write
+  id-token: write # required for cosign keyless (sigstore OIDC)
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    env:
+      TAG_NAME: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build console
+        run: pnpm --filter @schemaforge/console build
+
+      - name: Package dist
+        run: |
+          # Pack the dist *contents* at the archive root so extraction yields
+          # index.html + assets/ directly (what SCHEMAFORGE_CONSOLE_DIST points at).
+          tar -czf "console-dist-${TAG_NAME}.tar.gz" -C apps/console/dist .
+
+      - name: Generate SHA256SUMS
+        run: sha256sum "console-dist-${TAG_NAME}.tar.gz" > SHA256SUMS
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign SHA256SUMS (keyless)
+        env:
+          COSIGN_YES: "true"
+        run: |
+          cosign sign-blob \
+            --output-signature SHA256SUMS.sig \
+            --output-certificate SHA256SUMS.pem \
+            SHA256SUMS
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          generate_release_notes: true
+          # Glob, not an interpolated tag name, so no ref-derived value is
+          # templated into the action input.
+          files: |
+            console-dist-*.tar.gz
+            SHA256SUMS
+            SHA256SUMS.sig
+            SHA256SUMS.pem

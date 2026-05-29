@@ -6,6 +6,11 @@ import react from "@vitejs/plugin-react"
 const upstream = process.env.VITE_FORGE_UPSTREAM ?? "http://localhost:3000"
 
 export default defineConfig({
+  // The console is served under /console by `schemaforge serve` (same-origin,
+  // behind a public-path prefix so the static SPA loads pre-auth). Building
+  // with this base makes asset URLs absolute under /console/...; the router
+  // reads the same value from import.meta.env.BASE_URL for its basename.
+  base: "/console/",
   plugins: [react()],
   server: {
     port: 5173,

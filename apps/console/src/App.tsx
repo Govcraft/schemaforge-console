@@ -47,7 +47,9 @@ function Routed() {
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      {/* basename derives from Vite's base (/console/) so all router paths are
+          relative to the mount point; trailing slash trimmed per RR contract. */}
+      <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, "")}>
         <ForgeRoot>
           <Routed />
         </ForgeRoot>
