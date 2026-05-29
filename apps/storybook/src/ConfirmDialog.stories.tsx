@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import { ConfirmDialog } from "@schemaforge/react"
 
 // Controlled on `open`; renders in the native <dialog> top layer over the

@@ -2,10 +2,10 @@ import type { StorybookConfig } from "@storybook/react-vite"
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.stories.@(ts|tsx)"],
-  // Essentials brings Controls + Actions (the prop "dials" + callback logging),
-  // Docs, viewport, etc. Without it every story is static — optional props can't
-  // be exercised. preview.tsx already enables expanded controls.
-  addons: ["@storybook/addon-essentials"],
+  // Storybook 9+ folds the former "essentials" (Controls, Actions, Viewport,
+  // Backgrounds) into core, so Docs is the only addon left to declare. Controls
+  // still drive the optional-prop "dials"; preview.tsx enables expanded controls.
+  addons: ["@storybook/addon-docs"],
   framework: { name: "@storybook/react-vite", options: {} },
   core: { disableTelemetry: true },
 }

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import { SpecSheet } from "@schemaforge/react"
 import { widgetFields, widgetRows } from "./mock-client"
 

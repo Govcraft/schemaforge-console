@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import type { EntityRow, FieldMeta } from "@schemaforge/client"
 import { ChildCollectionSection, EntityForm, EntityParentChild, SpecSheet } from "@schemaforge/react"
 

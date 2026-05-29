@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import { ErrorBlock } from "@schemaforge/react"
 
 const meta: Meta<typeof ErrorBlock> = {
