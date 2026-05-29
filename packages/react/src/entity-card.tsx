@@ -9,7 +9,7 @@
 // never leaks onto a card. Reusable beyond kanban — dashboards, galleries,
 // search results.
 
-import { canReadField, type EntityRow, type FieldMeta } from "@schemaforge/client"
+import { canReadField, relationDisplay, type EntityRow, type FieldMeta } from "@schemaforge/client"
 import { useForgeNav, useForgeRoles } from "./context"
 import { FieldValue } from "./field-value"
 
@@ -62,7 +62,7 @@ export function EntityCard({ row, titleField, fields, href, classes }: EntityCar
             <div key={f.name} className={classes?.row ?? "sf-card-field"}>
               <dt className={classes?.key ?? "sf-card-key"}>{f.name}</dt>
               <dd className={classes?.value ?? "sf-card-val"}>
-                <FieldValue field={f} value={row[f.name]} />
+                <FieldValue field={f} value={row[f.name]} display={relationDisplay(row, f)} />
               </dd>
             </div>
           ))}
