@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import type { EnumColor, EntityRow, FieldMeta } from "@schemaforge/client"
 import { KanbanBoard } from "@schemaforge/react"
 

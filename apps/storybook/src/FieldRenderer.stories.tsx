@@ -1,5 +1,5 @@
 import { useState } from "react"
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import type { FieldMeta } from "@schemaforge/client"
 import { FieldRenderer } from "@schemaforge/react"
 

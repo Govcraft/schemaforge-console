@@ -1,5 +1,5 @@
 import { useState } from "react"
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import { listColumns, type EnumColor, type EntityRow, type FieldMeta } from "@schemaforge/client"
 import { EntityTable, type EntityTableProps, type SortDir } from "@schemaforge/react"
 import { widgetFields, widgetRows } from "./mock-client"

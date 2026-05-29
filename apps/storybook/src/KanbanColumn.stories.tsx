@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import { KanbanColumn } from "@schemaforge/react"
 
 // KanbanColumn is the generic lane the board stacks cards into: a StatusBadge +

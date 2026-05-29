@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react"
-import type { Meta, StoryObj } from "@storybook/react"
-import { fn } from "@storybook/test"
+import type { Meta, StoryObj } from "@storybook/react-vite"
+import { fn } from "storybook/test"
 import type { FieldMeta } from "@schemaforge/client"
 import { EntityForm } from "@schemaforge/react"
 import { widgetFields, widgetRows } from "./mock-client"

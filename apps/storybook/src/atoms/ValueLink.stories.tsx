@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react"
+import type { Meta, StoryObj } from "@storybook/react-vite"
 import { ValueLink } from "@schemaforge/react"
 
 const meta: Meta<typeof ValueLink> = {
