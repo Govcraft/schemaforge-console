@@ -27,12 +27,31 @@ import {
 export type FieldValueProps = {
   field: FieldMeta
   value: unknown
+  /** For a relation field, the server-resolved display label(s) for `value` —
+   *  the related record's `@display` value (see `relationDisplay`). relation_one
+   *  → string, relation_many → string[]. When absent (no `@display`, or
+   *  `resolve=false`), the raw id is shown shortened rather than in full. */
+  display?: unknown
 }
 
 const EMPTY = <span className="sf-muted">{EMPTY_DISPLAY}</span>
 
 function isEmpty(value: unknown): boolean {
   return value === null || value === undefined || value === ""
+}
+
+/** `company:01hzx…abcd` → `company:0…abcd` — only the raw-id fallback path,
+ *  when the server resolved no `@display` label for the relation. */
+function shortId(id: string): string {
+  if (id.length <= 18) return id
+  return id.slice(0, 8) + "…" + id.slice(-6)
+}
+
+/** Prefer the resolved label; fall back to a shortened raw id. */
+function relationLabel(id: unknown, display: unknown): string {
+  if (typeof display === "string" && display !== "") return display
+  if (id === null || id === undefined) return ""
+  return shortId(String(id))
 }
 
 /** `closed_won` → `Closed Won` — humanize an enum token for badge display. */
@@ -63,8 +82,22 @@ function safeStringify(value: unknown): string {
   }
 }
 
-export function FieldValue({ field, value }: FieldValueProps): ReactNode {
+export function FieldValue({ field, value, display }: FieldValueProps): ReactNode {
   if (isEmpty(value)) return EMPTY
+
+  // Relation fields: the server resolves the target's `@display` field and ships
+  // it as a `<field>__display` sibling, which the caller passes as `display`.
+  // Show the label instead of the opaque id; an unresolved relation falls back
+  // to a shortened id. (kind is definitive, so this precedes widget handling.)
+  if (field.kind === "relation_one") {
+    return <>{relationLabel(value, display)}</>
+  }
+  if (field.kind === "relation_many") {
+    const ids = Array.isArray(value) ? value : [value]
+    const labels = Array.isArray(display) ? display : []
+    const items = ids.map((id, i) => relationLabel(id, labels[i])).filter((s) => s !== "")
+    return items.length === 0 ? EMPTY : <TagList items={items} />
+  }
 
   // `@enum_colors` implies a colored status badge even without `@widget`.
   if (field.widget === "status_badge" || (field.kind === "enum" && field.enumColors)) {

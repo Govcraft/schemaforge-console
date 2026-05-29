@@ -14,12 +14,16 @@ import { FieldValue } from "./field-value"
 export type FieldRendererProps = {
   field: FieldMeta
   value: unknown
+  /** Read-only only: server-resolved relation label(s) (the `__display`
+   *  sibling). Threaded to FieldValue so a detail/spec view shows the related
+   *  record's `@display` value rather than its id. */
+  display?: unknown
   onChange?: (next: unknown) => void
   readOnly?: boolean
   id?: string
 }
 
-function ReadOnly({ field, value }: { field: FieldMeta; value: unknown }): ReactNode {
+function ReadOnly({ field, value, display }: { field: FieldMeta; value: unknown; display?: unknown }): ReactNode {
   if (value === null || value === undefined || value === "") return <span className="sf-muted">—</span>
   if (field.kind === "composite" && field.subFields) {
     const obj = (value ?? {}) as Record<string, unknown>
@@ -38,11 +42,11 @@ function ReadOnly({ field, value }: { field: FieldMeta; value: unknown }): React
   // widget-rich variants — badges, bars, chips, links, swatches) goes through
   // the shared FieldValue renderer so read-only display is identical in the
   // form, the spec sheet, and the table.
-  return <FieldValue field={field} value={value} />
+  return <FieldValue field={field} value={value} display={display} />
 }
 
-export function FieldRenderer({ field, value, onChange, readOnly, id }: FieldRendererProps): ReactNode {
-  if (readOnly || !onChange) return <ReadOnly field={field} value={value} />
+export function FieldRenderer({ field, value, display, onChange, readOnly, id }: FieldRendererProps): ReactNode {
+  if (readOnly || !onChange) return <ReadOnly field={field} value={value} display={display} />
 
   const textareaWidget =
     field.widget === "richtext" || field.widget === "rich_text" || field.widget === "textarea"

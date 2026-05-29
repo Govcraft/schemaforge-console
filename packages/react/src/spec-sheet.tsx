@@ -7,6 +7,7 @@
 
 import {
   canReadField,
+  relationDisplay,
   type EntityRow,
   type FieldMeta,
 } from "@schemaforge/client"
@@ -45,7 +46,7 @@ export function SpecSheet({ fields, data, classes }: SpecSheetProps) {
               {empty ? (
                 <span className="sf-muted">— empty</span>
               ) : (
-                <FieldRenderer field={f} value={value} readOnly />
+                <FieldRenderer field={f} value={value} display={relationDisplay(data, f)} readOnly />
               )}
             </dd>
           </div>

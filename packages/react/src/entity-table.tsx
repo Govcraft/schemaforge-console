@@ -17,6 +17,7 @@
 import { type ReactNode } from "react"
 import {
   canReadField,
+  relationDisplay,
   type EntityPermissions,
   type EntityRow,
   type FieldMeta,
@@ -55,11 +56,12 @@ export type EntityTableProps = {
   classes?: EntityTableClasses
 }
 
-function defaultCell(field: FieldMeta, value: unknown): ReactNode {
+function defaultCell(field: FieldMeta, value: unknown, row: EntityRow): ReactNode {
   // Shared widget-aware renderer: badges, bars, chips, links, swatches, dates,
-  // money, arrays, booleans — never a raw ISO string or JSON blob. Empties
-  // render as the muted em-dash inside FieldValue.
-  return <FieldValue field={field} value={value} />
+  // money, arrays, booleans — never a raw ISO string or JSON blob. Relation
+  // fields show the server-resolved `@display` label via the `__display`
+  // sibling. Empties render as the muted em-dash inside FieldValue.
+  return <FieldValue field={field} value={value} display={relationDisplay(row, field)} />
 }
 
 function shortId(id: string): string {
